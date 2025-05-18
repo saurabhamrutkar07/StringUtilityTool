@@ -1,0 +1,446 @@
+react component file 
+
+"use client"
+
+import { useState, useEffect } from "react"
+import { Copy, Check, RefreshCw, Type, AlignLeft } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Badge } from "@/components/ui/badge"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+
+// StringUtility class implementation
+class StringUtility {
+  constructor(text) {
+    this.text = text
+  }
+
+  toUpper() {
+    return this.text.toUpperCase()
+  }
+
+  toLower() {
+    return this.text.toLowerCase()
+  }
+
+  reverse() {
+    return this.text.split("").reverse().join("")
+  }
+
+  countVowels() {
+    return [...this.text].filter((char) => "aeiouAEIOU".includes(char)).length
+  }
+
+  wordCount() {
+    return this.text.trim().split(/\s+/).length
+  }
+
+  characterCount() {
+    return this.text.trim().length
+  }
+
+  lengthFinder() {
+    return this.text.length
+  }
+
+  toCamelCase() {
+    const words = this.text.toLowerCase().split(/\s+/)
+    return (
+      words[0] +
+      words
+        .slice(1)
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join("")
+    )
+  }
+
+  toSnakeCase() {
+    return this.text.toLowerCase().trim().split(/\s+/).join("_")
+  }
+
+  pascalCase() {
+    return this.text
+      .split(/\s+/)
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+      .join("")
+  }
+
+  titleCase() {
+    return this.text
+      .split(/\s+/)
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+      .join(" ")
+  }
+
+  swapCase() {
+    return [...this.text].map((c) => (c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase())).join("")
+  }
+
+  dotCase() {
+    return this.text.toLowerCase().trim().split(/\s+/).join(".")
+  }
+}
+
+export default function StringUtilityApp() {
+  const [inputText, setInputText] = useState("Type your text here to transform it")
+  const [copied, setCopied] = useState({})
+  const [utility, setUtility] = useState(new StringUtility(inputText))
+  const [activeTab, setActiveTab] = useState("case-transformations")
+
+  useEffect(() => {
+    setUtility(new StringUtility(inputText))
+  }, [inputText])
+
+  const handleCopy = (text, id) => {
+    navigator.clipboard.writeText(text)
+    setCopied({ ...copied, [id]: true })
+    setTimeout(() => {
+      setCopied({ ...copied, [id]: false })
+    }, 2000)
+  }
+
+  const sampleTexts = [
+    "The quick brown fox jumps over the lazy dog",
+    "Hello World! Welcome to String Utility",
+    "React is a JavaScript library for building user interfaces",
+    "Tailwind CSS is a utility-first CSS framework",
+  ]
+
+  const transformations = [
+    {
+      id: "upper",
+      name: "UPPERCASE",
+      method: "toUpper",
+      category: "case-transformations",
+      icon: <Type className="h-4 w-4" />,
+    },
+    {
+      id: "lower",
+      name: "lowercase",
+      method: "toLower",
+      category: "case-transformations",
+      icon: <Type className="h-4 w-4" />,
+    },
+    {
+      id: "camel",
+      name: "camelCase",
+      method: "toCamelCase",
+      category: "case-transformations",
+      icon: <Type className="h-4 w-4" />,
+    },
+    {
+      id: "snake",
+      name: "snake_case",
+      method: "toSnakeCase",
+      category: "case-transformations",
+      icon: <Type className="h-4 w-4" />,
+    },
+    {
+      id: "pascal",
+      name: "PascalCase",
+      method: "pascalCase",
+      category: "case-transformations",
+      icon: <Type className="h-4 w-4" />,
+    },
+    {
+      id: "title",
+      name: "Title Case",
+      method: "titleCase",
+      category: "case-transformations",
+      icon: <Type className="h-4 w-4" />,
+    },
+    {
+      id: "swap",
+      name: "sWaP cAsE",
+      method: "swapCase",
+      category: "case-transformations",
+      icon: <Type className="h-4 w-4" />,
+    },
+    {
+      id: "dot",
+      name: "dot.case",
+      method: "dotCase",
+      category: "case-transformations",
+      icon: <Type className="h-4 w-4" />,
+    },
+    {
+      id: "reverse",
+      name: "Reverse",
+      method: "reverse",
+      category: "manipulations",
+      icon: <RefreshCw className="h-4 w-4" />,
+    },
+    {
+      id: "vowels",
+      name: "Vowel Count",
+      method: "countVowels",
+      category: "analytics",
+      icon: <AlignLeft className="h-4 w-4" />,
+    },
+    {
+      id: "words",
+      name: "Word Count",
+      method: "wordCount",
+      category: "analytics",
+      icon: <AlignLeft className="h-4 w-4" />,
+    },
+    {
+      id: "chars",
+      name: "Character Count",
+      method: "characterCount",
+      category: "analytics",
+      icon: <AlignLeft className="h-4 w-4" />,
+    },
+    {
+      id: "length",
+      name: "Length",
+      method: "lengthFinder",
+      category: "analytics",
+      icon: <AlignLeft className="h-4 w-4" />,
+    },
+  ]
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-900 dark:to-gray-800 p-4 md:p-8">
+      <div className="max-w-6xl mx-auto">
+        <header className="text-center mb-8">
+          <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600 mb-2">
+            String Utility Transformer
+          </h1>
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Transform your text instantly with our powerful string utility tool. Type or paste your text below and see
+            the magic happen!
+          </p>
+        </header>
+
+        <div className="mb-8">
+          <div className="relative">
+            <Input
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              className="p-4 text-lg rounded-xl shadow-sm border-2 border-purple-100 dark:border-gray-700 focus:border-purple-300 dark:focus:border-purple-500 transition-all"
+              placeholder="Enter your text here..."
+            />
+            <Button
+              variant="ghost"
+              size="sm"
+              className="absolute right-2 top-1/2 transform -translate-y-1/2"
+              onClick={() => setInputText("")}
+            >
+              Clear
+            </Button>
+          </div>
+
+          <div className="flex flex-wrap gap-2 mt-4">
+            {sampleTexts.map((text, index) => (
+              <Badge
+                key={index}
+                variant="outline"
+                className="cursor-pointer hover:bg-purple-100 dark:hover:bg-gray-700 transition-colors"
+                onClick={() => setInputText(text)}
+              >
+                {text.length > 20 ? text.substring(0, 20) + "..." : text}
+              </Badge>
+            ))}
+          </div>
+        </div>
+
+        <Tabs defaultValue="case-transformations" value={activeTab} onValueChange={setActiveTab} className="mb-8">
+          <TabsList className="grid grid-cols-3 mb-6">
+            <TabsTrigger value="case-transformations" className="text-sm md:text-base">
+              Case Transformations
+            </TabsTrigger>
+            <TabsTrigger value="manipulations" className="text-sm md:text-base">
+              Manipulations
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="text-sm md:text-base">
+              Analytics
+            </TabsTrigger>
+          </TabsList>
+
+          {["case-transformations", "manipulations", "analytics"].map((category) => (
+            <TabsContent key={category} value={category} className="mt-0">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {transformations
+                  .filter((t) => t.category === category)
+                  .map((transformation) => {
+                    const result = utility[transformation.method]()
+                    const isAnalytics = category === "analytics"
+
+                    return (
+                      <Card
+                        key={transformation.id}
+                        className="overflow-hidden transition-all hover:shadow-md border-2 border-purple-50 dark:border-gray-700"
+                      >
+                        <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-700 p-4">
+                          <div className="flex justify-between items-center">
+                            <CardTitle className="text-lg flex items-center gap-2">
+                              {transformation.icon}
+                              {transformation.name}
+                            </CardTitle>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="h-8 w-8 p-0"
+                                    onClick={() => handleCopy(result.toString(), transformation.id)}
+                                  >
+                                    {copied[transformation.id] ? (
+                                      <Check className="h-4 w-4 text-green-500" />
+                                    ) : (
+                                      <Copy className="h-4 w-4" />
+                                    )}
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>{copied[transformation.id] ? "Copied!" : "Copy to clipboard"}</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </div>
+                          <CardDescription>
+                            {isAnalytics ? "Analyzes your text" : "Transforms your text"}
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-4">
+                          <div
+                            className={`rounded-md p-3 ${
+                              isAnalytics
+                                ? "bg-purple-100 dark:bg-gray-800 text-center text-2xl font-bold text-purple-700 dark:text-purple-300"
+                                : "bg-gray-50 dark:bg-gray-800 font-mono text-sm overflow-x-auto max-h-24 overflow-y-auto"
+                            }`}
+                          >
+                            {result.toString()}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )
+                  })}
+              </div>
+            </TabsContent>
+          ))}
+        </Tabs>
+
+        <footer className="text-center text-gray-500 dark:text-gray-400 mt-12 pb-8">
+          <p>
+            Made with <span className="text-red-500">❤️</span> for string manipulation enthusiasts
+          </p>
+        </footer>
+      </div>
+    </div>
+  )
+}
+
+
+
+
+
+Tailwind config.js 
+
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: ["class"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+    "*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
+    extend: {
+      colors: {
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        purple: {
+          50: "#f5f3ff",
+          100: "#ede9fe",
+          200: "#ddd6fe",
+          300: "#c4b5fd",
+          400: "#a78bfa",
+          500: "#8b5cf6",
+          600: "#7c3aed",
+          700: "#6d28d9",
+          800: "#5b21b6",
+          900: "#4c1d95",
+          950: "#2e1065",
+        },
+        pink: {
+          50: "#fdf2f8",
+          100: "#fce7f3",
+          200: "#fbcfe8",
+          300: "#f9a8d4",
+          400: "#f472b6",
+          500: "#ec4899",
+          600: "#db2777",
+          700: "#be185d",
+          800: "#9d174d",
+          900: "#831843",
+          950: "#500724",
+        },
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+      keyframes: {
+        "accordion-down": {
+          from: { height: 0 },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: 0 },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+      },
+    },
+  },
+  plugins: [require("tailwindcss-animate")],
+}
